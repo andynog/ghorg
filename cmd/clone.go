@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gabrie30/ghorg/colorlog"
-	"github.com/gabrie30/ghorg/configs"
+	"github.com/andynog/ghorg/colorlog"
+	"github.com/andynog/ghorg/configs"
 	"github.com/korovkin/limiter"
 	"github.com/spf13/cobra"
 )
@@ -174,6 +174,7 @@ func getAllOrgCloneUrls() ([]Repo, error) {
 	PrintConfigs()
 	var repos []Repo
 	var err error
+	os.Setenv("GHORG_ORG_TO_CLONE", args[0])
 	switch os.Getenv("GHORG_SCM_TYPE") {
 	case "github":
 		repos, err = getGitHubOrgCloneUrls()
@@ -440,7 +441,7 @@ func CloneAllRepos() {
 				}
 			}
 
-			colorlog.PrintSuccess("Success " + repo.URL)
+			colorlog.PrintSuccess("Success clone" + repo.URL)
 		})
 
 	}

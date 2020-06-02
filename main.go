@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gabrie30/ghorg/cmd"
+	"github.com/andynog/ghorg/cmd"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gabrie30/ghorg/configs"
+	"github.com/andynog/ghorg/configs"
 )
 
 func TestDefaultSettings(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gabrie30/ghorg/colorlog"
+	"github.com/andynog/ghorg/colorlog"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )

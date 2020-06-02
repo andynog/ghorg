@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gabrie30/ghorg/configs"
+	"github.com/andynog/ghorg/configs"
 	"github.com/spf13/cobra"
 )
 

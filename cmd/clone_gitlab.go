@@ -1,11 +1,15 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 
-	"github.com/gabrie30/ghorg/colorlog"
+	"github.com/andynog/ghorg/colorlog"
 	gitlab "github.com/xanzy/go-gitlab"
 )
 
@@ -33,6 +37,7 @@ func getGitLabOrgCloneUrls() ([]Repo, error) {
 	}
 
 	for {
+		colorlog.PrintInfo("Getting Gitlab project information...")
 		// Get the first page with projects.
 		ps, resp, err := client.Groups.ListGroupProjects(args[0], opt)
 
@@ -61,6 +66,19 @@ func getGitLabOrgCloneUrls() ([]Repo, error) {
 			r := Repo{}
 
 			r.Path = p.PathWithNamespace
+			folder := filepath.Join(os.Getenv("GHORG_ABSOLUTE_PATH_TO_CLONE_TO"), os.Getenv("GHORG_ORG_TO_CLONE") + "_meta")
+			dir := filepath.Join(folder, r.Path)
+			err := os.MkdirAll(dir, os.ModePerm)
+			if err != nil {
+				colorlog.PrintError("Error creating folder: " + err.Error())
+			}
+
+			file, _ := json.MarshalIndent(p, "", " ")
+			filename := filepath.Join(dir, "/", strconv.Itoa(p.ID) + ".json")
+			err = ioutil.WriteFile(filename, file, 0644)
+			if err != nil {
+				colorlog.PrintError("Error creating file: " + err.Error())
+			}
 			if os.Getenv("GHORG_CLONE_PROTOCOL") == "https" {
 				r.CloneURL = addTokenToHTTPSCloneURL(p.HTTPURLToRepo, os.Getenv("GHORG_GITLAB_TOKEN"))
 				r.URL = p.HTTPURLToRepo
@@ -80,7 +98,7 @@ func getGitLabOrgCloneUrls() ([]Repo, error) {
 		// Update the page number to get the next page.
 		opt.Page = resp.NextPage
 	}
-
+	colorlog.PrintInfo("Got Gitlab project information!")
 	return repoData, nil
 }
 
@@ -130,6 +148,7 @@ func getGitLabUserCloneUrls() ([]Repo, error) {
 			}
 			r := Repo{}
 			r.Path = p.PathWithNamespace
+			colorlog.PrintSuccess("Project Path: " + r.Path)
 			if os.Getenv("GHORG_CLONE_PROTOCOL") == "https" {
 				r.CloneURL = addTokenToHTTPSCloneURL(p.HTTPURLToRepo, os.Getenv("GHORG_GITLAB_TOKEN"))
 				r.URL = p.HTTPURLToRepo
