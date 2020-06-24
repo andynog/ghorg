@@ -441,7 +441,7 @@ func CloneAllRepos() {
 				}
 			}
 
-			colorlog.PrintSuccess("Success clone" + repo.URL)
+			colorlog.PrintSuccess("Success clone: " + repo.URL)
 		})
 
 	}
